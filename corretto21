@@ -1,0 +1,22 @@
+# Base image: Amazon Corretto JDK 21
+FROM amazoncorretto:21
+
+LABEL maintainer="you@example.com"
+LABEL description="Custom Corretto 21 base image with Maven and utilities"
+
+# Install basic tools (curl, unzip, etc.)
+RUN yum update -y && yum install -y curl unzip git && yum clean all
+
+# Install Maven
+ARG MAVEN_VERSION=3.9.9
+RUN curl -sSL https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    | tar -xz -C /opt \
+ && ln -s /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn
+
+# Verify installation
+RUN java -version && mvn -version
+
+# Default working directory
+WORKDIR /app
+
+CMD ["java", "-versi
